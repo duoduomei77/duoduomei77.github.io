@@ -1,0 +1,36 @@
+body{
+    background-image: url(image/04.jpg);
+    background-position: center -130px;
+    background-repeat: no-repeat;
+    background-color: black;
+    background-attachment: fixed;
+    color: white;
+}
+
+h1,h2{
+    text-align: center;
+}
+a{
+    color: yellow;
+    text-decoration: none;
+}
+h3{
+    color: pink;
+}
+.r{
+    display: block;
+    text-align: center;
+    font-size: larger;
+    height: 30;
+    color: red;
+    background: rgba(180, 76, 189, 0.3);
+}
+.line_size{
+    height: 200px;
+    line-height: 30px;
+    text-align: center;
+    font-size: 25px;
+}
+.red{
+    color: red;
+}
