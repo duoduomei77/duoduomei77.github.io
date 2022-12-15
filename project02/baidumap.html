@@ -1,19 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <script type="text/javascript" src="https://api.map.baidu.com/api?v=3.0&ak=9o8CIBAhgEv7zsyP7aUcHXimLw6hM0GM"></script>
+    <script type="text/javascript"
+        src="https://api.map.baidu.com/api?v=3.0&ak=9o8CIBAhgEv7zsyP7aUcHXimLw6hM0GM"></script>
 </head>
+
 <body>
-    <div id="container" style="width: 1200px;height: 400px;"></div>
+    <div id="container" style="width: 1400px;height: 800px;"></div>
 
     <script>
-        var map = new BMap.Map("container"); 
-        var point = new BMap.Point(116.404, 39.915); 
-        map.centerAndZoom(point, 15);  
+        var map = new BMap.Map("container");
+        var point = new BMap.Point(113.3245904, 23.1066805);
+        map.centerAndZoom(point, 15);
+        map.enableScrollWheelZoom(true);     
+        map.addControl(new BMap.NavigationControl());
+        map.addControl(new BMap.OverviewMapControl());
+        map.addControl(new BMap.ScaleControl());
+        map.addControl(new BMap.MapTypeControl());
+
+
+        var marker = new BMap.Marker(point);      
+        map.addOverlay(marker);
+
+        marker.addEventListener("click", function () {
+            //alert("您点击了标注");
+            map.openInfoWindow(infoWindow, point);    
+        });
+
+
+        var opts = {
+            width: 250,      
+            height: 100,     
+            title: "Hello"   
+        }
+        var infoWindow = new BMap.InfoWindow("World", opts);  
+        map.openInfoWindow(infoWindow, point);     
+
+
     </script>
 </body>
+
 </html>
