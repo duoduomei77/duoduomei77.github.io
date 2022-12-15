@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+
+<body>
+	<!-- HTML -->
+	<!-- S VUE挂载主体 -->
+	<section class="weather" id="weather" @keyup.enter="getWeather()">
+		<!-- S 头部 -->
+		<header class="main-head">
+			<h2>weather Search</h2>
+		</header>
+		<!-- E 头部 -->
+		<!-- S 查询信息 -->
+		<section class="main-search">
+			<div class="search-city">
+				<input type="text" placeholder="Input city" class="text-search" v-model="city">
+				<input type="button" value="Search" class="text-button" @click="getWeather()">
+			</div>
+			<div class="save-city">
+				<span v-for="item in aCity" @click="getWeather(item)">{{item}}</span>
+			</div>
+		</section>
+		<!-- E 查询信息 -->
+		<!-- S 底部展示 -->
+		<footer class="main-showInfo">
+			<div class="weather-text" v-for="item in oWeather">
+				<div class="weather-top" v-text="item.type"></div>
+				<div class="weather-mid">{{item.low}}~{{item.high}}</div>
+				<div class="weather-bom" v-text="item.date"></div>
+			</div>
+		</footer>
+		<!-- E 底部展示 -->
+	</section>
+	<!-- E VUE挂载主体 -->
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<!-- 导入vue2 -->
+	<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+	<script>
+		/* Start Vue实例 */
+		let oVue = new Vue({
+			el: '#weather',
+			data: {
+				city: '',
+				aCity: [],
+				oWeather: {}
+			},
+			methods: {
+				getWeather(inputCity) {
+					this.city = inputCity ? inputCity : this.city;
+					if (!!this.city) {
+						const that = this;
+						axios.get(`http://wthrcdn.etouch.cn/weather_mini?city=${that.city}`)
+							.then((res) => {
+								that.city = '';
+								const oData = res.data.data;
+								const bRepeat = that.aCity.findIndex((item) => {
+									return item === oData.city
+								}) > -1 ? true : false;
+								if (that.aCity.length >= 5 && !inputCity) {
+									that.aCity.shift()
+								}
+								if (!bRepeat) {
+									that.aCity.push(oData.city)
+								}
+								that.oWeather = oData.forecast
+							})
+							.catch((err) => {
+								alert(err)
+							})
+					}
+				}
+			}
+		})
+    /* End Vue实例 */
+	</script>
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@500&family=ZCOOL+XiaoWei&display=swap');
+
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		ul li {
+			list-style: none;
+		}
+
+		/* S 主体 */
+		/* S 主体 */
+		.weather {
+			display: flex;
+			flex-direction: column;
+			width: 100%;
+			height: 600px;
+			margin: 100px auto;
+			text-align: center;
+			/* 子元素侧轴对齐 */
+			align-items: center;
+			/* 子元素主轴对齐 */
+			justify-content: center;
+		}
+
+		/* E 主体 */
+		/* S 头部样式 */
+		.main-head {
+			flex: 1;
+			display: flex;
+		}
+
+		.main-head h2 {
+			margin: auto;
+			font-size: 50px;
+			/* 设置文字间隔和缩进保证字体居中 */
+			letter-spacing: 10px;
+			text-indent: 10px;
+			font-family: 'Josefin Sans', sans-serif;
+			-webkit-background-clip: text;
+			-moz-background-clip: text;
+			-ms-background-clip: text;
+			background-clip: text;
+			background-image: linear-gradient(45deg, rgb(128, 208, 226), rgb(47, 200, 234), rgb(153, 147, 68), rgb(255, 15, 15));
+			color: transparent;
+		}
+
+		/* E 头部样式 */
+		/* S 查询框样式 */
+		.main-search {
+			flex: 1;
+			width: 800px;
+			flex-direction: column;
+			color: rgb(96, 166, 166);
+		}
+
+		.main-search .search-city {
+			display: flex;
+			font-size: 0;
+			/* border: 1px solid rgb(96, 166, 166); */
+			/* 此处border会有缩放白边，采用box-shadow处理 */
+			box-shadow: 0px 0px 0px 4px rgb(96, 166, 166);
+		}
+
+		.main-search input {
+			outline: none;
+			border: none;
+			height: 60px;
+			font-family: 'Josefin Sans', sans-serif;
+			font-size: 24px;
+			/* 解决中文字体高度和英文不对称导致的输入中文后元素不对齐 */
+			vertical-align: bottom
+		}
+
+		.text-search {
+			flex: 8;
+			text-indent: 20px;
+			color: rgb(96, 166, 166);
+		}
+
+		.text-button {
+			flex: 2;
+			color: #fff;
+			background-color: rgb(96, 166, 166);
+		}
+
+		/* ------------/搜索框 */
+		.main-search .save-city {
+			padding-top: 10px;
+			text-align: left;
+		}
+
+		.main-search .save-city span {
+			margin-right: 10px;
+			font-size: 20px;
+			cursor: pointer;
+		}
+
+		.main-search .save-city span:hover {
+			color: brown;
+		}
+
+		/* ------------/点击文字 */
+		/* E 查询框样式 */
+		/* S 底部展示样式 */
+		.main-showInfo {
+			flex: 2;
+			width: 1200px;
+			display: flex;
+			flex-direction: row;
+		}
+
+		.main-showInfo .weather-text {
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			height: 70%;
+		}
+
+		.weather-text div {
+			font-size: 20px;
+			color: orange;
+		}
+
+		.weather-text .weather-top {
+			flex: 2;
+			font-size: 40px;
+		}
+
+		.weather-text .weather-mid {
+			flex: 1;
+		}
+
+		.weather-text .weather-bom {
+			flex: 1;
+			color: rgb(80, 80, 80);
+		}
+
+		/* E 底部展示样式 */
+	</style>
+
+</body>
+
+</html>
